@@ -2299,7 +2299,7 @@ function(libname, pkgname) {
     if (class(object.name)[1]=="felm") {
       return("felm")
     }
-    if (class(object.name)[1]=="feglm") {
+    if (class(object.name)[1]=="fixest") {
       return("feglm")
     }
     if (class(object.name)[1] %in% c("mclogit","mclogitRandeff")) {
