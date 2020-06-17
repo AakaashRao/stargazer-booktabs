@@ -912,7 +912,7 @@ function(libname, pkgname) {
   	else if (model.name %in% c("lme","nlme")) {
   	  return(rownames(.summary.object$tTable))
   	}
-  	else if (model.name %in% c("felm")) {
+  	else if (model.name %in% c("felm", "feglm")) {
   	  return(row.names(object.name$coefficients))
     }
   	else if (model.name %in% c("maBina")) {
@@ -1237,7 +1237,7 @@ function(libname, pkgname) {
     model.name <- .get.model.name(object.name)
     
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "rq", "gmm","mclogit","felm")) {
+                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "rq", "gmm","mclogit","felm", "feglm")) {
   		return(.summary.object$coefficients[,4])
   	}
  
@@ -1568,7 +1568,7 @@ function(libname, pkgname) {
   	if (model.name %in% c("ergm")) {
   	  return(.summary.object$coefs[,2])
   	}
-    if (model.name %in% c("rq","felm")) {
+    if (model.name %in% c("rq","felm","feglm")) {
       return(.summary.object$coefficients[,2])
     }
   	if (model.name %in% c("clm")) {
@@ -1800,7 +1800,7 @@ function(libname, pkgname) {
   	model.name <- .get.model.name(object.name)
 
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-      				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "glm()", "Glm()", "svyglm()","plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit", "felm")) {
+      				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "glm()", "Glm()", "svyglm()","plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit", "felm", "feglm")) {
   		return(.summary.object$coefficients[,3])
   	}
   	if (model.name %in% c("censReg")) {
@@ -2296,9 +2296,11 @@ function(libname, pkgname) {
     if (class(object.name)[1]=="nlme") {
       return("nlme")
     }
-    
     if (class(object.name)[1]=="felm") {
       return("felm")
+    }
+    if (class(object.name)[1]=="feglm") {
+      return("feglm")
     }
     if (class(object.name)[1] %in% c("mclogit","mclogitRandeff")) {
       return("mclogit")
@@ -2796,7 +2798,7 @@ function(libname, pkgname) {
     else if (model.name %in% c("mlogit")) {
       return(sum(object.name$freq))
     }
-    else if (model.name %in% c("felm")) {
+    else if (model.name %in% c("felm", "feglm")) {
       return(object.name$N)
     }
     else if (model.name %in% c("mclogit")) {
@@ -4858,7 +4860,7 @@ function(libname, pkgname) {
     if (model.name %in% c("lagsarlm", "errorsarlm")) {
       return(.summary.object$Coef[,1])
     }
-    if (model.name %in% c("rq","felm")) {
+    if (model.name %in% c("rq","felm", "feglm")) {
       return(.summary.object$coefficients[,1])
     }
   	if (model.name %in% c("clm")) {
