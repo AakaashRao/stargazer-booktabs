@@ -6052,7 +6052,7 @@ function(libname, pkgname) {
         
           # if zelig$result relevant, identify this automatically
           if (class(objects[[i]]) %in% c("coeftest","lmerMod","glmerMod","nlmerMod","fGARCH")) {  # use this to eliminate lmer, glmer, nlmer
-            if (.model.identify(objects[[i]])=="unknown") { error.present <- c(error.present, "% Error: Unrecognized object type.\n",i) }
+            if (.model.identify(objects[[i]])=="unknown") { error.present <- c(error.present, "% Error: Unrecognized object type 1.\n",i) }
           }
           else {
             if (!is.null(objects[[i]]$zelig.call)) {
@@ -6062,8 +6062,8 @@ function(libname, pkgname) {
             }
         
             ###
-            if (is.atomic(objects[[i]]) & (!is.null(objects[[i]]))) { error.present <- c(error.present, "% Error: Unrecognized object type.\n") }
-            else if (.model.identify(objects[[i]])=="unknown") { error.present <- c(error.present, "% Error: Unrecognized object type.\n") }
+            if (is.atomic(objects[[i]]) & (!is.null(objects[[i]]))) { error.present <- c(error.present, "% Error: Unrecognized object type 2.\n") }
+            else if (.model.identify(objects[[i]])=="unknown") { error.present <- c(error.present, "% Error: Unrecognized object type 3.\n") }
             else if (.model.identify(objects[[i]])=="unsupported zelig") { error.present <- c(error.present, "% Error: Unsupported 'zelig' model.\n") }
           }  
         }
