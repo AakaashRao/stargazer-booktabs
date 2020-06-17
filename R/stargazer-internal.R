@@ -2620,7 +2620,7 @@ function(libname, pkgname) {
   	  return("ivreg")
   	} 
    }
-  	
+   browser()
    return("unknown")
     
   }
@@ -3794,7 +3794,7 @@ function(libname, pkgname) {
 
   	model.name <- .get.model.name(object.name)
 
-  	if (!(model.name %in% c("arima","fGARCH","Arima","coeftest", "Gls","multinom","lmer","glmer","nlmer"))) {
+  	if (!(model.name %in% c("arima","fGARCH","Arima","coeftest", "Gls","multinom","lmer","glmer","nlmer","fixest","feglm"))) {
       if (model.name %in% c("rem.dyad")) {
         residual.deviance.value <- object.name$residual.deviance
         residual.deviance.output <- as.vector(c(residual.deviance.value, NA, NA))
@@ -3819,7 +3819,6 @@ function(libname, pkgname) {
   		  residual.deviance.output <- as.vector(c(residual.deviance.value, df.value, NA))
   		}
   	}
-
   	names(residual.deviance.output) <- c("statistic","df1","p-value")
   	return(cbind(residual.deviance.output))
   }
