@@ -2810,7 +2810,7 @@ function(libname, pkgname) {
     else if (model.name %in% c("mlogit")) {
       return(sum(object.name$freq))
     }
-    else if (model.name %in% c("felm", "feglm", "fixest")) {
+    else if (model.name %in% c("felm")) {
       return(object.name$N)
     }
     else if (model.name %in% c("mclogit")) {
@@ -2837,7 +2837,7 @@ function(libname, pkgname) {
     else if (model.name %in% c("hurdle", "zeroinfl")) {
       return(as.vector(object.name$n))
     }
-    else if (model.name %in% c("ivreg","clm","hetglm")) {
+    else if (model.name %in% c("ivreg","clm","hetglm","feglm")) {
       return(as.vector(object.name$nobs))
     }
     if (model.name %in% c("normal.gee", "logit.gee", "poisson.gee",
