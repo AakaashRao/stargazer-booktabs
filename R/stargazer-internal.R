@@ -94,6 +94,9 @@ function(libname, pkgname) {
   	    found <- FALSE
   	    
   		  for (j in seq(1:length(.global.coefficient.variables))) {
+          if (length(coef.var)==0) {
+            browser()
+          }
   			    if (coef.var[i] == .global.coefficient.variables[j]) {
   				    found <- TRUE
   				    for (k in 1:how.many.gcv) {
@@ -894,7 +897,7 @@ function(libname, pkgname) {
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.gee", "logit.gee", "probit.gee", "poisson.gee", "normal.gam", 
   				    "logit.gam", "probit.gam", "poisson.gam", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.gee", "gamma.survey",
   				    "exp", "weibull", "coxph", "clogit", "lognorm", "tobit", "tobit(AER)", "brglm", "glm()", "Glm()", "svyglm()", "gee()", "survreg()", "gam()", "plm", "ivreg", "pmg", "lmrob", "glmrob", 
-              "dynlm", "gls", "rq", "lagsarlm", "errorsarlm", "gmm", "mclogit")) {
+              "dynlm", "gls", "rq", "lagsarlm", "errorsarlm", "gmm", "mclogit", "feglm")) {
   		return(as.vector(names(object.name$coefficients)))
   	}
   	else if (model.name %in% c("Arima")) {
@@ -912,7 +915,7 @@ function(libname, pkgname) {
   	else if (model.name %in% c("lme","nlme")) {
   	  return(rownames(.summary.object$tTable))
   	}
-  	else if (model.name %in% c("felm", "feglm")) {
+  	else if (model.name %in% c("felm")) {
   	  return(row.names(object.name$coefficients))
     }
   	else if (model.name %in% c("maBina")) {
@@ -1237,11 +1240,12 @@ function(libname, pkgname) {
     model.name <- .get.model.name(object.name)
     
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "rq", "gmm","mclogit","felm", "feglm")) {
+                            "cloglog.net", "gamma.net", "logit.net", "probit.net", "brglm", "glm()", "Glm()", "svyglm()", "plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "rq", "gmm","mclogit","felm")) {
   		return(.summary.object$coefficients[,4])
   	}
- 
-
+    if (model.name %in% c("feglm")) {
+      return(.summary.object$coeftable$`Pr(>|z|)`)
+    }
     if (model.name %in% c("censReg")) {
       return(.summary.object$estimate[,4])
     }
@@ -1568,8 +1572,11 @@ function(libname, pkgname) {
   	if (model.name %in% c("ergm")) {
   	  return(.summary.object$coefs[,2])
   	}
-    if (model.name %in% c("rq","felm","feglm")) {
+    if (model.name %in% c("rq","felm")) {
       return(.summary.object$coefficients[,2])
+    }
+    if (model.name %in% c("feglm")) {
+      return(.summary.object$se)
     }
   	if (model.name %in% c("clm")) {
   	  if (.format.ordered.intercepts == FALSE) {
@@ -1800,9 +1807,12 @@ function(libname, pkgname) {
   	model.name <- .get.model.name(object.name)
 
   	if (model.name %in% c("ls", "normal", "logit", "probit", "relogit", "poisson", "negbin", "normal.survey", "poisson.survey", "probit.survey", "logit.survey", "gamma", "gamma.survey",
-      				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "glm()", "Glm()", "svyglm()","plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit", "felm", "feglm")) {
+      				    "cloglog.net", "gamma.net", "logit.net", "probit.net", "glm()", "Glm()", "svyglm()","plm", "pgmm", "ivreg", "lmrob", "glmrob", "dynlm", "gmm", "mclogit", "felm")) {
   		return(.summary.object$coefficients[,3])
   	}
+    if (model.name %in% c("feglm")) {
+      return(.summary.object$coeftable$`z value`)
+    }
   	if (model.name %in% c("censReg")) {
   	  return(.summary.object$estimate[,3])
   	}
@@ -2302,6 +2312,9 @@ function(libname, pkgname) {
     if (class(object.name)[1]=="fixest") {
       return("feglm")
     }
+    if (class(object.name)[1]=="feglm") {
+      return("feglm")
+    }
     if (class(object.name)[1] %in% c("mclogit","mclogitRandeff")) {
       return("mclogit")
     }
@@ -2620,7 +2633,6 @@ function(libname, pkgname) {
   	  return("ivreg")
   	} 
    }
-   browser()
    return("unknown")
     
   }
@@ -2798,7 +2810,7 @@ function(libname, pkgname) {
     else if (model.name %in% c("mlogit")) {
       return(sum(object.name$freq))
     }
-    else if (model.name %in% c("felm", "feglm")) {
+    else if (model.name %in% c("felm", "feglm", "fixest")) {
       return(object.name$N)
     }
     else if (model.name %in% c("mclogit")) {
@@ -4859,8 +4871,11 @@ function(libname, pkgname) {
     if (model.name %in% c("lagsarlm", "errorsarlm")) {
       return(.summary.object$Coef[,1])
     }
-    if (model.name %in% c("rq","felm", "feglm")) {
+    if (model.name %in% c("rq","felm")) {
       return(.summary.object$coefficients[,1])
+    }
+    if (model.name %in% c("feglm")) {
+      return(.summary.object$coefficients)
     }
   	if (model.name %in% c("clm")) {
   	  if (.format.ordered.intercepts == FALSE) {
@@ -7069,6 +7084,7 @@ function(libname, pkgname) {
             else { .format.label <- label[length(label)] }
             
             if (type == "latex") {
+              #browser()
               do.call(.stargazer.reg.table, as.list(objects[regression.table.objects]))  
               invisible.output <- latex.code <- c(invisible.output, invisible(capture.output(do.call(.stargazer.reg.table, as.list(objects[regression.table.objects])),file=NULL)) )
             }
